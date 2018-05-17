@@ -80,7 +80,7 @@ trait BenchmarkDataSupport {
   def createDataFrame(geom: Geometry)(implicit spark: SparkSession): DataFrame = {
     val stable = spark
     import stable.implicits._
-    Seq(geom).toDF("geom")
+    Seq((1, geom)).toDF("key", "geom")
   }
 
   def createPointsTable(implicit spark: SparkSession): DataFrame = {

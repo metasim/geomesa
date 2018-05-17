@@ -21,8 +21,8 @@ import org.openjdk.jmh.annotations._
 class WKBScaleBench extends SparkSupport with BenchmarkDataSupport {
   @Setup(Level.Trial)
   def setupData(): Unit = {
-    createPointsTable
-    createCountriesTable
+    createPointsTable(spark)
+    createCountriesTable(spark)
   }
 
   @Benchmark

@@ -31,14 +31,8 @@ case class JTSCentroidExpresssion(child: Expression) extends UnaryExpression wit
     val centroid = input match {
       case g: Geometry => g.getCentroid
       case r: InternalRow =>
-        val geomRow = child.eval(r).asInstanceOf[InternalRow]
-        val wkbRow = geomRow.getStruct(0, 1)
-        val wkb= PointUDT.readWKB(wkbRow)
-//        // TODO: Read this directly
-        wkbReader.read(wkb).getCentroid
-        //PointUDT.deserialize(geomRow.get(0, PointUDT)).getCentroid
-        PointUDT.deserialize(geomRow).getCentroid
-    }
+        wkbReader.read(PointUDT.readWKB(r)).getCentroid
+   }
     PointUDT.serialize(centroid)
   }
 }

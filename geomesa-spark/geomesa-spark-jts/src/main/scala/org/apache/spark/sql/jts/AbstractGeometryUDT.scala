@@ -12,7 +12,7 @@ import com.vividsolutions.jts.geom.Geometry
 import org.apache.spark.sql.catalyst.InternalRow
 import org.apache.spark.sql.catalyst.expressions.GenericInternalRow
 import org.apache.spark.sql.types._
-import org.locationtech.geomesa.spark.jts.util.GMWKBUtils
+import org.locationtech.geomesa.spark.jts.util.{GMWKBUtils, WKBUtils}
 
 import scala.reflect._
 
@@ -36,7 +36,7 @@ abstract class AbstractGeometryUDT[T >: Null <: Geometry: ClassTag](override val
 
   override def deserialize(datum: Any): T = {
     val ir = datum.asInstanceOf[InternalRow]
-    GMWKBUtils.read(readWKB(ir)).asInstanceOf[T]
+    WKBUtils.read(readWKB(ir)).asInstanceOf[T]
   }
 }
 

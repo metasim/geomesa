@@ -28,7 +28,7 @@ import org.locationtech.geomesa.spark.jts.encoders.SpatialEncoders
 
 @BenchmarkMode(Array(Mode.Throughput))
 @State(Scope.Benchmark)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Fork(1)
 @Warmup(iterations = 3)
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
@@ -47,7 +47,6 @@ class WKBCentroidBench extends SparkSupport with BenchmarkDataSupport with Spati
     val _ = spark
     org.apache.spark.sql.functions.udf(SpatialRelationFunctions.ST_Centroid)
   }
-
   def expressionImpl(col: Column): TypedColumn[Any, Point] = JTSCentroidExpresssion(col.expr).asColumn.as[Point]
 
   @Setup(Level.Trial)
@@ -80,7 +79,6 @@ class WKBCentroidBench extends SparkSupport with BenchmarkDataSupport with Spati
   def expressionCentroid: Point = {
     df.select(expressionImpl(col("geom"))).as[Point].first
   }
-
 }
 
 object WKBCentroidBench {
