@@ -11,6 +11,7 @@ package org.locationtech.geomesa.spark.jts.util
 import com.vividsolutions.jts.geom.Geometry
 import com.vividsolutions.jts.io._
 import org.locationtech.geomesa.jts.GeoMesaWKBReader
+import org.locationtech.geomesa.spark.jts.util.GMWKBUtils.WKBData
 import org.locationtech.geomesa.spark.jts.util.WKBUtils.WKBData
 
 trait WKTUtils {
@@ -35,7 +36,7 @@ trait JTSWKBUtils {
 
   def read(s: String): Geometry = read(s.getBytes)
   def read(b: Array[Byte]): Geometry = readerPool.get.read(b)
-  def write(g: Geometry): WKBData = writerPool.get.write(g).asInstanceOf[WKBData]
+  def write(g: Geometry): WKBUtils.WKBData = writerPool.get.write(g).asInstanceOf[WKBUtils.WKBData]
 }
 
 trait GMWKBUtils {
@@ -48,14 +49,18 @@ trait GMWKBUtils {
 
   def read(s: String): Geometry = read(s.getBytes)
   def read(b: Array[Byte]): Geometry = readerPool.get.read(b)
-  def write(g: Geometry): WKBData = writerPool.get.write(g).asInstanceOf[WKBData]
+  def write(g: Geometry): GMWKBUtils.WKBData = GMWKBUtils.WKBData(writerPool.get.write(g))
 }
 
 object WKTUtils extends WKTUtils
 
 object GMWKBUtils extends GMWKBUtils {
   trait RawWKB
+
   type WKBData = Array[Byte] with RawWKB
+  object WKBData {
+    def apply(a: Array[Byte]) = a.asInstanceOf[WKBData]
+  }
 }
 
 object WKBUtils extends JTSWKBUtils {

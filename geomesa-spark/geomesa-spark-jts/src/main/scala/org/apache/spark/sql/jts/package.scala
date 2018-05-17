@@ -9,6 +9,7 @@
 package org.apache.spark.sql
 
 import org.apache.spark.sql.catalyst.analysis.FunctionRegistry
+import org.apache.spark.sql.catalyst.expressions.Expression
 import org.apache.spark.sql.types.UDTRegistration
 
 package object jts {
@@ -26,5 +27,9 @@ package object jts {
    */
   private[jts] lazy val registration: Unit = JTSTypes.typeMap.foreach {
     case (l, r) => UDTRegistration.register(l.getCanonicalName, r.getCanonicalName)
+  }
+
+  implicit class CanBeColumn(expression: Expression) {
+    def asColumn: Column = Column(expression)
   }
 }

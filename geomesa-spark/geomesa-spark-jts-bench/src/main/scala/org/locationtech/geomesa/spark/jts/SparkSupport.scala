@@ -17,11 +17,15 @@ import org.apache.spark.sql.SparkSession
  */
 trait SparkSupport {
   @transient
-  lazy implicit val spark = SparkSession.builder
-    .master("local[*]")
-    .appName(getClass.getSimpleName)
-    .config("spark.ui.enabled", false)
-    .config("spark.ui.showConsoleProgress", false)
-    .getOrCreate
-    .withJTS
+  lazy val spark = {
+    val s = SparkSession.builder
+      .master("local[*]")
+      .appName(getClass.getSimpleName)
+      .config("spark.ui.enabled", false)
+      .config("spark.ui.showConsoleProgress", false)
+      .getOrCreate
+      .withJTS
+    s.sparkContext.setLogLevel("ERROR")
+    s
+  }
 }
